@@ -1,10 +1,10 @@
-# chatbot-rnn
+# Tensorflow-Chatbot
 A toy chatbot powered by deep learning and trained on data from Reddit. Built on TensorFlow v1.4.0 and Python v3.5.1.
 
 Here is a sample chat transcript (not cherry-picked). Lines that start with ">" are me; the lines without ">" are the chatbot's responses.
 
 ```
-$ python3 chatbot.py
+$ python3 chattybot.py
 Creating model...
 Restoring weights...
 
@@ -61,7 +61,7 @@ Try playing around with the arguments to `chatbot.py` to obtain better samples:
 These values can also be manipulated during a chat, and the model state can be reset, without restarting the chatbot:
 
 ```
-$ python3 chatbot.py
+$ python3 chattybot.py
 Creating model...
 Restoring weights...
 
