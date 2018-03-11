@@ -42,56 +42,9 @@ Restoring weights...
 
 - Clone this project to your computer.
 
-### Run my pre-trained model
-
-- **Download [my pre-trained model](https://drive.google.com/uc?id=1rRRY-y1KdVk4UB5qhu7BjQHtfadIOmMk&export=download)** (2.3 GB). The zip file extracts into a folder named "reddit". Place that folder into the "models" directory of this project.
-
-- **Run the chatbot**. Open a terminal session and run `python3 chatbot.py`. Warning: this pre-trained model was trained on a diverse set of frequently off-color Reddit comments. It can (and eventually will) say things that are offensive, disturbing, bizarre or sexually explicit. It may insult minorities, it may call you names, it may accuse you of being a pedophile, it may try to seduce you. Please don't use the chatbot if these possibilities would distress you!
-
-Try playing around with the arguments to `chatbot.py` to obtain better samples:
-
-- **beam_width**: By default, `chatbot.py` will use beam search with a beam width of 2 to sample responses. Set this higher for more careful, more conservative (and slower) responses, or set it to 1 to disable beam search.
-
-- **temperature**: At each step, the model ascribes a certain probability to each character. Temperature can adjust the probability distribution. 1.0 is neutral (and the default), lower values increase high probability values and decrease lower probability values to make the choices more conservative, and higher values will do the reverse. Values outside of the range of 0.5-1.5 are unlikely to give coherent results.
-
-- **top-n**: At each step, zero out the probability of all possible characters except the *n* most likely. Disabled by default.
-
-- **relevance**: Two models are run in parallel: the primary model and the mask model. The mask model is scaled by the relevance value, and then the probabilities of the primary model are combined according to equation 9 in [Li, Jiwei, et al. "A diversity-promoting objective function for neural conversation models." arXiv preprint arXiv:1510.03055 (2015)](https://arxiv.org/abs/1510.03055). The state of the mask model is reset upon each newline character. The net effect is that the model is encouraged to choose a line of dialogue that is most relevant to the prior line of dialogue, even if a more generic response (e.g. "I don't know anything about that") may be more absolutely probable. Higher relevance values put more pressure on the model to produce relevant responses, at the cost of the coherence of the responses. Going much above 0.4 compromises the quality of the responses. Setting it to a negative value disables relevance, and this is the default, because I'm not confident that it qualitatively improves the outputs and it halves the speed of sampling.
-
-These values can also be manipulated during a chat, and the model state can be reset, without restarting the chatbot:
-
-```
-$ python3 chattybot.py
-Creating model...
-Restoring weights...
-
-> --temperature 1.3
-[Temperature set to 1.3]
-
-> --relevance 0.3
-[Relevance set to 0.3]
-
-> --relevance -1
-[Relevance disabled]
-
-> --topn 2
-[Top-n filtering set to 2]
-
-> --topn -1
-[Top-n filtering disabled]
-
-> --beam_width 5
-[Beam width set to 5]
-
-> --reset
-[Model state reset]
-```
-
 ### Get training data
 
 If you'd like to train your own model, you'll need training data. There are a few options here.
-
-- **Use pre-formatted Reddit training data.** This is what the pre-trained model was trained on.
 
   [Download the training data](https://drive.google.com/uc?id=1s77S7COjrb3lOnfqvXYfn7sW_x5U1_l9&export=download) (2.1 GB). Unzip the monolithic zip file. You'll be left with a folder named "reddit" containing 34 files named "output 1.bz2", "output 2.bz2" etc. Do not extract those individual bzip2 files. Instead, place the whole "reddit" folder that contains those files inside the `data` folder of the repo. The first time you run `train.py` on this data, it will convert the raw data into numpy tensors, compress them and save them back to disk, which will create files named "data0.npz" through "data34.npz" (as well as a "sizes.pkl" file and a "vocab.pkl" file). This will fill another ~5 GB of disk space, and will take about half an hour to finish.
 
